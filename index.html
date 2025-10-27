@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Café Rheintreff</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Gemütliches Café am Rhein – Kuchen, Kaffee & mehr." />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <h1>Café Rheintreff</h1>
+      <p class="tagline">Kaffee. Kuchen. Kiez-Charme.</p>
+    </div>
+    <nav class="nav">
+      <a href="#home">Home</a>
+      <a href="#menu">Menu</a>
+      <a href="#about">Über uns</a>
+      <a href="#contact">Kontakt</a>
+    </nav>
+  </header>
+
+  <main id="home" class="container">
+    <section class="hero">
+      <h2>Willkommen im Café Rheintreff</h2>
+      <p>Ein Stück Gemütlichkeit am Flussufer — ehrliche Preise, hausgebackener Kuchen und freundliches Personal.</p>
+      <a class="cta" href="#menu">Zum Menü</a>
+    </section>
+
+    <section id="menu" class="menu">
+      <h3>Unser Angebot</h3>
+      <ul>
+        <li>Cappuccino — 2,90 €</li>
+        <li>Flat White — 3,20 €</li>
+        <li>Hausgemachter Apfelkuchen — 3,50 €</li>
+        <li>Frühstücksteller — 6,90 €</li>
+      </ul>
+    </section>
+
+    <section id="about" class="about">
+      <h3>Über das Café</h3>
+      <p>Seit 2018 Treffpunkt für Nachbarn und Pendler. Wir legen Wert auf faire Produkte und regionale Zutaten.</p>
+    </section>
+
+    <section id="contact" class="contact">
+      <h3>Kontakt</h3>
+      <address>
+        Rheinufer 12<br/> 40213 Musterstadt<br/>
+        <a href="tel:+491701234567">+49 170 1234567</a>
+      </address>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© Café Rheintreff</p>
+  </footer>
+
+  <!-- *******************************
+       Verstecktechniken (Beispiele)
+       - HTML-Kommentar (sichtbar per "View Source")
+       - data-* Attribute (sichtbar per DOM / Inspector)
+       - verstecktes <div style="display:none">
+       - CSS-Kommentar
+       - Base64-codierte Nachricht (im Kommentar)
+     ********************************-->
+
+  <!-- Hidden clue 1 (HTML comment):
+       Suche nach: "RHEINTREFF-CLUE-1"
+       RHEINTREFF-CLUE-1: Standort= "Rheinbrücke Nord", Zeit=2025-09-23T07:10Z
+  -->
+
+  <div id="stealth" data-secret="RHEINTREFF-DATA:owner=Jens;role=visitor;id=009" style="display:none">
+    <!-- RHEINTREFF-CLUE-2: SGVsbG8sIHRoaXMgaXMgYSBiYXNlNjQgZXhhbXBsZS4= -->
+  </div>
+
+  <script>
+    // kleines helper-Snippet, das die Base64-Nachricht im #stealth div bei Bedarf dekodiert
+    // (für die Übung: Entwicklerkonsole öffnen und eingeben: decodeStealth())
+    function decodeStealth() {
+      const el = document.getElementById('stealth');
+      if (!el) return null;
+      const raw = el.innerHTML.trim();
+      // innerHTML enthält Kommentar mit Base64; hier extrahieren wir zwischen ":" und "-->"
+      const m = raw.match(/RHEINTREFF-CLUE-2:\s*([A-Za-z0-9+/=]+)/);
+      if (!m) return null;
+      try {
+        const decoded = atob(m[1]);
+        console.log('decoded stealth:', decoded);
+        return decoded;
+      } catch (e) {
+        console.warn('decode error', e);
+        return null;
+      }
+    }
+    // expose globally for convenience
+    window.decodeStealth = decodeStealth;
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+:root{
+  --bg:#fffef7;
+  --accent:#7fb77e; /* freundlich grün */
+  --muted:#6b6b6b;
+  --card:#ffffff;
+  --shadow: 0 6px 18px rgba(0,0,0,0.06);
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background: linear-gradient(180deg,var(--bg),#f7f7f2);
+  color:#222;
+  line-height:1.45;
+}
+.container{max-width:940px;margin:28px auto;padding:16px}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;background:transparent}
+.brand h1{margin:0;font-size:1.6rem;color:var(--accent)}
+.nav a{margin-left:12px;text-decoration:none;color:var(--muted)}
+.hero{background:var(--card);padding:28px;border-radius:14px;box-shadow:var(--shadow)}
+.cta{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none}
+
+/* CSS Kommentar mit Hinweis (sichtbar in style.css) */
+/* RHEINTREFF-CSS-HINT: check-css-comment -> secret-code: 42RHEIN */
