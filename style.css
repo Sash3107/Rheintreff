@@ -8,12 +8,17 @@
 }
 
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background: linear-gradient(180deg,var(--bg),#f7f7f2);
-  color:#222;
-  line-height:1.45;
+body {
+  margin: 0;
+  font-family: Inter, system-ui, Arial, sans-serif;
+  color: #222;
+  line-height: 1.45;
+  background: url("images/kaffeebohnen-bg.png") no-repeat center center fixed;
+  background-size: cover;
+  background-attachment: fixed;
+  background-color: #f7f3ee; /* Fallback, falls Bild nicht geladen wird */
 }
+
 .container{max-width:940px;margin:28px auto;padding:16px}
 .site-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;background:transparent}
 .brand h1{margin:0;font-size:1.6rem;color:var(--accent)}
@@ -23,3 +28,4 @@ body{
 
 /* CSS Kommentar mit Hinweis (sichtbar in style.css) */
 /* RHEINTREFF-CSS-HINT: check-css-comment -> secret-code: 42RHEIN */
+
