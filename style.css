@@ -126,7 +126,7 @@ body::before {
 }
 
 .download-banner img {
-  width: 280px;        /* feste Größe des Banners */
+  width: 200px;        /* feste Größe des Banners */
   max-width: 90%;      /* für schmale Bildschirme */
   height: auto;
   border-radius: 14px;
@@ -139,4 +139,5 @@ body::before {
   transform: scale(1.03);
   opacity: 0.92;
 }
+
 
