@@ -119,3 +119,24 @@ body::before {
   opacity: 1;
 }
 
+.download-banner {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 10px 0;
+}
+
+.download-banner img {
+  width: 320px;          /* Größe des Banners */
+  max-width: 90%;        /* für responsive Layouts */
+  cursor: pointer;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.download-banner img:hover {
+  transform: scale(1.03);
+  opacity: 0.92;
+}
+
+
