@@ -98,3 +98,24 @@ body::before {
 
 /* CSS-Kommentar mit Hinweis (Beispiel) */
 /* RHEINTREFF-CSS-HINT: 42RHEIN */
+
+
+/* Unsichtbarer, klickbarer Link unten rechts */
+.hidden-link{
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  width: 22px;   /* klein genug, um nicht aufzufallen */
+  height: 22px;
+  opacity: 0;    /* unsichtbar */
+  z-index: 9999; /* über allem */
+  pointer-events: auto; /* bleibt klickbar */
+}
+
+/* Optional: Für Entwickler schnell testbar (URL mit ?reveal=1 zeigt den Bereich) */
+:root.reveal-hidden .hidden-link {
+  outline: 2px dashed rgba(0,0,0,0.35);
+  background: rgba(255, 230, 0, 0.2);
+  opacity: 1;
+}
+
