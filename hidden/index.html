@@ -134,11 +134,19 @@
     .title{
       display:flex; flex-direction:column; gap:6px;
     }
+
+    /* Thread-Link: wirkt klickbar, aber ist ein Leerlink */
     .title a{
       color:var(--text);
       text-decoration:none;
       font-weight:720;
+      cursor:pointer;
     }
+    .title a:hover{
+      text-decoration: underline;
+      text-decoration-color: rgba(255,59,106,0.6);
+    }
+
     .meta{ color:var(--muted); font-size:.86rem; }
 
     .tag{
@@ -196,6 +204,18 @@
       font-size:.85rem;
       margin-bottom:8px;
     }
+
+    /* Leerlink für User im Post */
+    .userlink{
+      color: var(--steel);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .userlink:hover{
+      text-decoration: underline;
+      text-decoration-color: rgba(0,204,255,0.6);
+    }
+
     .content[contenteditable="true"]{
       outline:none;
       border-radius:10px;
@@ -325,7 +345,7 @@
     const defaultState = {
       threads: [
         { title:"Barenucklefighter gesucht - BUNDESWEIT!", tag:"REQUEST", last:"Heute 02:14", replies:"18" },
-       { title:"Stadtbild gerät ausser Kontrolle - Zeit für \"Gegenmaßnahmen\"", tag:"OFFTOPIC", last:"Heute 01:50", replies:"9" },
+        { title:"Stadtbild gerät ausser Kontrolle - Zeit für \"Gegenmaßnahmen\"", tag:"OFFTOPIC", last:"Heute 01:50", replies:"9" },
         { title:"Kampf der Hühnen - 23.12. - Köln", tag:"MATCH", last:"Gestern 23:41", replies:"7" },
         { title:"Rurgewalt - 05.01. - Bochum", tag:"MATCH", last:"Gestern 18:09", replies:"12" },
         { title:"16.01. - Essen - Schlaganfall!", tag:"MATCH", last:"12.12.2025", replies:"31" }
@@ -375,10 +395,14 @@
         const title = document.createElement("div");
         title.className = "title";
 
+        // Leerlink für Threadtitel
         const a = document.createElement("a");
-        a.href = "javascript:void(0)";
+        a.href = "#";
         a.textContent = t.title;
         a.setAttribute("contenteditable","true");
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+        });
         a.addEventListener("input", () => {
           const s = loadState();
           s.threads[idx].title = a.textContent;
@@ -443,9 +467,16 @@
         const head = document.createElement("div");
         head.className = "posthead";
         head.innerHTML = `
-          <span><strong contenteditable="true" class="u">${escapeHtml(p.user)}</strong></span>
+          <span>
+            <a href="#" class="userlink"><strong contenteditable="true" class="u">${escapeHtml(p.user)}</strong></a>
+          </span>
           <span contenteditable="true" class="t">${escapeHtml(p.time)}</span>
         `;
+
+        // Leerlink: User-Link macht nichts
+        head.querySelector(".userlink").addEventListener("click", (e) => {
+          e.preventDefault();
+        });
 
         const content = document.createElement("div");
         content.className = "content";
@@ -497,4 +528,3 @@
   </script>
 </body>
 </html>
-
