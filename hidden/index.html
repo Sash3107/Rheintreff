@@ -135,7 +135,7 @@
       display:flex; flex-direction:column; gap:6px;
     }
 
-    /* Thread-Link: wirkt klickbar, aber ist ein Leerlink */
+    /* Thread-Link: klickbar (Leerlink) */
     .title a{
       color:var(--text);
       text-decoration:none;
@@ -216,16 +216,11 @@
       text-decoration-color: rgba(0,204,255,0.6);
     }
 
-    .content[contenteditable="true"]{
-      outline:none;
+    .content{
       border-radius:10px;
       padding:8px;
       min-height:46px;
       white-space:pre-wrap;
-    }
-    .content[contenteditable="true"]:focus{
-      border:1px dashed rgba(255,59,106,0.55);
-      background:rgba(7,9,11,0.33);
     }
 
     aside{ display:flex; flex-direction:column; gap:16px; }
@@ -250,14 +245,16 @@
     }
     .kpi .card .l{ color:var(--muted); font-size:.82rem; margin-top:4px; }
 
-    .note{
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,204,102,0.25);
-      background:rgba(255,204,102,0.06);
-      color:rgba(255,204,102,0.92);
-      font-size:.86rem;
-      margin-top:10px;
+    /* Leerlink-Style für Sidebar ("Aktuelles") */
+    .sidelink{
+      color: var(--muted);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .sidelink:hover{
+      color: var(--text);
+      text-decoration: underline;
+      text-decoration-color: rgba(255,59,106,0.55);
     }
 
     @media (max-width: 940px){
@@ -290,9 +287,7 @@
 
   <main>
     <section class="panel">
-      <h2>
-        Threads
-      </h2>
+      <h2>Threads</h2>
 
       <div class="list" id="threadList"></div>
 
@@ -302,7 +297,7 @@
             <div class="t">Regelwerk</div>
             <div class="meta">Hier findet ihr alle Infos um euch dem Kampf anzuschließen.</div>
           </div>
-          <div class="tag warn" contenteditable="true" id="currentTag">RULES</div>
+          <div class="tag warn" id="currentTag">RULES</div>
         </div>
 
         <div id="posts"></div>
@@ -313,7 +308,7 @@
       <section class="panel">
         <h2>Board Overview <span class="sub">local</span></h2>
         <div class="box">
-          <div class="tag safe">EDIT MODE</div>
+          <div class="tag safe">VIEW MODE</div>
 
           <div class="kpi">
             <div class="card">
@@ -331,9 +326,15 @@
       <section class="panel">
         <h2>Aktuelles</h2>
         <div class="box">
-          <p><span style="color:var(--danger)">•</span> Nibelungen revival? Hat jemand was davon gehört?</p>
-          <p><span style="color:var(--danger)">•</span> Suche Kampfpartner in Essen und Umgebung bis 110 Kilo.</p>
-          <p><span style="color:var(--danger)">•</span> Stress suchen auf Kölner Ringe am 31.12.?</p>
+          <p><span style="color:var(--danger)">•</span>
+            <a class="sidelink js-void" href="#">Nibelungen revival? Hat jemand was davon gehört?</a>
+          </p>
+          <p><span style="color:var(--danger)">•</span>
+            <a class="sidelink js-void" href="#">Suche Kampfpartner in Essen und Umgebung bis 110 Kilo.</a>
+          </p>
+          <p><span style="color:var(--danger)">•</span>
+            <a class="sidelink js-void" href="#">Stress suchen auf Kölner Ringe am 31.12.?</a>
+          </p>
         </div>
       </section>
     </aside>
@@ -342,6 +343,7 @@
   <script>
     const STORAGE_KEY = "rheintreff_forum_state_v2";
 
+    // Hinweis: Editierbarkeit ist deaktiviert. localStorage bleibt nur als Fallback/State-Lader bestehen.
     const defaultState = {
       threads: [
         { title:"Barenucklefighter gesucht - BUNDESWEIT!", tag:"REQUEST", last:"Heute 02:14", replies:"18" },
@@ -366,9 +368,6 @@
         return structuredClone(defaultState);
       }
     }
-    function saveState(state){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
 
     function render(){
       const state = loadState();
@@ -379,49 +378,25 @@
       document.getElementById("kpiThreads").textContent = state.threads.length;
       document.getElementById("kpiPosts").textContent = state.posts.length;
 
-      // Current tag editable
-      const currentTag = document.getElementById("currentTag");
-      currentTag.textContent = state.currentTag || "RULES";
-      currentTag.addEventListener("input", () => {
-        const s = loadState();
-        s.currentTag = currentTag.textContent.trim() || "RULES";
-        saveState(s);
-      }, { once:false });
+      // Current tag (nur Anzeige)
+      document.getElementById("currentTag").textContent = state.currentTag || "RULES";
 
-      state.threads.forEach((t, idx) => {
+      state.threads.forEach((t) => {
         const row = document.createElement("div");
         row.className = "row";
 
         const title = document.createElement("div");
         title.className = "title";
 
-        // Leerlink für Threadtitel
+        // Leerlink für Threadtitel (klickbar, aber ohne Aktion)
         const a = document.createElement("a");
         a.href = "#";
+        a.className = "js-void";
         a.textContent = t.title;
-        a.setAttribute("contenteditable","true");
-        a.addEventListener("click", (e) => {
-          e.preventDefault();
-        });
-        a.addEventListener("input", () => {
-          const s = loadState();
-          s.threads[idx].title = a.textContent;
-          saveState(s);
-        });
 
         const tag = document.createElement("div");
         tag.className = "tag";
-        // Farb-Varianten rein kosmetisch:
-        const rawTag = (t.tag || "").toUpperCase();
-        if (rawTag.includes("RULE") || rawTag.includes("VERI")) tag.classList.add("warn");
-        if (rawTag.includes("OFF")) tag.classList.remove("warn");
         tag.textContent = t.tag;
-        tag.setAttribute("contenteditable","true");
-        tag.addEventListener("input", () => {
-          const s = loadState();
-          s.threads[idx].tag = tag.textContent.trim() || "TAG";
-          saveState(s);
-        });
 
         const meta = document.createElement("div");
         meta.className = "meta";
@@ -433,24 +408,11 @@
 
         const last = document.createElement("div");
         last.className = "meta";
-        last.setAttribute("contenteditable","true");
         last.textContent = t.last;
-        last.addEventListener("input", () => {
-          const s = loadState();
-          s.threads[idx].last = last.textContent.trim() || "—";
-          saveState(s);
-          render();
-        });
 
         const reps = document.createElement("div");
         reps.className = "meta";
-        reps.setAttribute("contenteditable","true");
         reps.textContent = t.replies;
-        reps.addEventListener("input", () => {
-          const s = loadState();
-          s.threads[idx].replies = reps.textContent.trim() || "0";
-          saveState(s);
-        });
 
         row.appendChild(title);
         row.appendChild(last);
@@ -460,7 +422,7 @@
 
       const posts = document.getElementById("posts");
       posts.innerHTML = "";
-      state.posts.forEach((p, idx) => {
+      state.posts.forEach((p) => {
         const box = document.createElement("div");
         box.className = "post";
 
@@ -468,40 +430,23 @@
         head.className = "posthead";
         head.innerHTML = `
           <span>
-            <a href="#" class="userlink"><strong contenteditable="true" class="u">${escapeHtml(p.user)}</strong></a>
+            <a href="#" class="userlink js-void"><strong class="u">${escapeHtml(p.user)}</strong></a>
           </span>
-          <span contenteditable="true" class="t">${escapeHtml(p.time)}</span>
+          <span class="t">${escapeHtml(p.time)}</span>
         `;
-
-        // Leerlink: User-Link macht nichts
-        head.querySelector(".userlink").addEventListener("click", (e) => {
-          e.preventDefault();
-        });
 
         const content = document.createElement("div");
         content.className = "content";
-        content.setAttribute("contenteditable","true");
         content.textContent = p.text;
-
-        head.querySelector(".u").addEventListener("input", (e) => {
-          const s = loadState();
-          s.posts[idx].user = e.target.textContent.trim() || "user";
-          saveState(s);
-        });
-        head.querySelector(".t").addEventListener("input", (e) => {
-          const s = loadState();
-          s.posts[idx].time = e.target.textContent.trim() || "—";
-          saveState(s);
-        });
-        content.addEventListener("input", () => {
-          const s = loadState();
-          s.posts[idx].text = content.textContent;
-          saveState(s);
-        });
 
         box.appendChild(head);
         box.appendChild(content);
         posts.appendChild(box);
+      });
+
+      // Alle Leerlinks deaktivieren (kein Scroll-to-top)
+      document.querySelectorAll("a.js-void").forEach((el) => {
+        el.addEventListener("click", (e) => e.preventDefault());
       });
     }
 
@@ -515,6 +460,7 @@
     }
 
     document.getElementById("reset").addEventListener("click", () => {
+      // Reset stellt nur den Ausgangszustand wieder her (falls du später wieder localStorage nutzt)
       localStorage.removeItem(STORAGE_KEY);
       render();
     });
@@ -528,3 +474,4 @@
   </script>
 </body>
 </html>
+
